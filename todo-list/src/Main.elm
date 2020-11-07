@@ -9,12 +9,19 @@ import Html.Attributes exposing (src)
 
 
 type alias Model =
-    {}
+    (List Todo)
+
+
+
+type alias Todo = 
+    { completed : Bool
+    , title : String
+    }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( {}, Cmd.none )
+    ( [] , Cmd.none )
 
 
 
@@ -22,12 +29,14 @@ init =
 
 
 type Msg
-    = NoOp
+    = AddTodo Todo
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        AddTodo newTodo ->
+            ( model ++ [ newTodo ], Cmd.none )
 
 
 
