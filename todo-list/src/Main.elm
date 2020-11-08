@@ -1,27 +1,34 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, text, div, h1, img)
-import Html.Attributes exposing (src)
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
+
 
 
 ---- MODEL ----
 
 
 type alias Model =
-    (List Todo)
+    List Todo
 
 
-
-type alias Todo = 
+type alias Todo =
     { completed : Bool
     , title : String
+    , id : Int
     }
+
+
+initialTodoList : List Todo
+initialTodoList =
+    [ { id = 1, completed = False, title = "Do the laundry" }, { id = 2, completed = True, title = "Be sad" } ]
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( [] , Cmd.none )
+    ( initialTodoList, Cmd.none )
 
 
 
@@ -30,13 +37,17 @@ init =
 
 type Msg
     = AddTodo Todo
+    | RemoveTodo Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         AddTodo newTodo ->
-            ( model ++ [ newTodo ], Cmd.none )
+            ( newTodo :: model, Cmd.none )
+
+        RemoveTodo id ->
+            ( List.filter (\todo -> todo.id /= id) model, Cmd.none )
 
 
 
@@ -46,8 +57,8 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Your Elm App is working!" ]
+        [ button [ onClick <| AddTodo { id = 3, completed = False, title = "Do dishes" } ] [ text "Add Todo" ]
+        , button [ onClick <| RemoveTodo 3 ] [ text "Remove Todo" ]
         ]
 
 
